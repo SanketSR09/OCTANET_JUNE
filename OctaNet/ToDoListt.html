@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #333;
+            padding: 20px;
+            text-align: center;
+            background-image: linear-gradient(to right, #00d2ff, #3a7bd5);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer {
+            background-color: #333;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 200px auto;
+            padding: 20px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            background-color: #444;
+        }
+
+        .input-container {
+            display: flex;
+        }
+
+        .input-container input[type="text"] {
+            flex: 1;
+            padding: 8px;
+        }
+
+        .input-container button {
+            padding: 8px 15px;
+            margin-left: 10px;
+        }
+
+        .task-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .task-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-text {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+        }
+
+        .delete-button,
+        .edit-button {
+            padding: 5px 10px;
+            margin-top: 20px;;
+            margin-left: 10px;
+            background-color: #ff5858;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div class="header">
+    <h1>TODO LIST</h1>
+</div>
+
+<div class="container">
+    <div class="input-container">
+        <input type="text" id="taskInput" placeholder="Enter a new task">
+        <button class="btn btn-primary" onclick="addTask()">Add Task</button>
+    </div>
+
+    <ul class="task-list" id="taskList"></ul>
+</div>
+
+<div class="footer">
+    <p>&copy; 2023 Todo List. All rights reserved.</p>
+</div>
+
+<script>
+    // Array to store the tasks
+    var tasks = [];
+
+    // Function to add a new task
+    function addTask() {
+        var taskInput = document.getElementById("taskInput");
+
+        if (taskInput.value.trim() !== "") {
+            var task = {
+                text: taskInput.value,
+                completed: false
+            };
+
+            tasks.push(task);
+            updateTaskList();
+
+            taskInput.value = "";
+        }
+    }
+
+    // Function to update the task list
+    function updateTaskList() {
+        var taskList = document.getElementById("taskList");
+        taskList.innerHTML = "";
+
+        tasks.forEach(function (task, index) {
+            var taskItem = document.createElement("li");
+            var taskText = document.createElement("span");
+            taskText.innerText = task.text;
+            taskText.className = "task-text";
+            taskText.addEventListener("click", function () {
+                toggleTaskCompletion(index);
+            });
+
+            if (task.completed) {
+                taskText.classList.add("completed");
+            }
+
+            var deleteButton = document.createElement("button");
+            deleteButton.innerText = "Delete";
+            deleteButton.className = "delete-button";
+            deleteButton.addEventListener("click", function () {
+                toggleTaskCompletion(index);
+            });
+
+            var editButton = document.createElement("button");
+            editButton.innerText = "Edit";
+            editButton.className = "edit-button";
+            editButton.addEventListener("click", function () {
+                editTask(index);
+            });
+
+            taskItem.appendChild(taskText);
+            taskItem.appendChild(deleteButton);
+            taskItem.appendChild(editButton);
+            taskList.appendChild(taskItem);
+        });
+    }
+
+    // Function to toggle the completion status of a task
+    function toggleTaskCompletion(index) {
+        tasks[index].completed = !tasks[index].completed;
+        updateTaskList();
+    }
+
+    // Function to delete a task
+    function deleteTask(index) {
+        tasks.splice(index, 1);
+        updateTaskList();
+    }
+
+    // Function to edit a task
+    function editTask(index) {
+        var newTaskText = prompt("Enter the updated task text:");
+        if (newTaskText !== null && newTaskText.trim() !== "") {
+            tasks[index].text = newTaskText;
+            updateTaskList();
+        }
+    }
+</script>
+</body>
+</html>
